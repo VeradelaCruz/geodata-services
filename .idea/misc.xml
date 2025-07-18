@@ -8,6 +8,8 @@
         <option value="$PROJECT_DIR$/geologist-service/pom.xml" />
         <option value="$PROJECT_DIR$/sample-service/pom.xml" />
         <option value="$PROJECT_DIR$/study-service/pom.xml" />
+        <option value="$PROJECT_DIR$/configGeo-server/pom.xml" />
+        <option value="$PROJECT_DIR$/api-gateway/pom.xml" />
       </list>
     </option>
   </component>

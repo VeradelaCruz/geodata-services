@@ -1,0 +1,28 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: api-gateway
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
+---
+spring:
+  cloud:
+    gateway:
+      routes:
+        - id: geologist-service
+          uri: lb://geologist-service
+          predicates:
+            - Path=/geologists/**
+        - id: study-service
+          uri: lb://study-service
+          predicates:
+            - Path=/studies/**
+        - id: sample-service
+          uri: lb://sample-service
+          predicates:
+            - Path=/samples/**
