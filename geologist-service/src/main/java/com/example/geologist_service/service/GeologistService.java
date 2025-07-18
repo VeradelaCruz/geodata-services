@@ -11,7 +11,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.Comparator;
 import java.util.List;
-import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 @Service
@@ -38,6 +37,11 @@ public class GeologistService {
                 .orElseThrow(() -> new ResourceNotFoundException("Geologist not found with id " + idGeologist));
     }
 
+    //Show geologists by id:
+    public List<Geologist> showGeologistsById( List<Long> ids){
+        return geologistRepository.findAllById(ids);
+    }
+
     //Show geologist sorted by last name:
     public List<Geologist> showGeologistSortedByLastName(){
         List<Geologist> geologists= showAllGeologists();
@@ -53,7 +57,7 @@ public class GeologistService {
         geologistRepository.deleteById(idGeologist);
     }
 
-    //Partial update with patch:
+    //Partial update:
     public Geologist patchGeologist(Long idGeologist, PatchGeologist patchGeologist){
         Geologist geologist= showGeologistById(idGeologist);
 
@@ -78,13 +82,14 @@ public class GeologistService {
 
 
     //Filter geologist by years of experience:
-    public  List<GeologistYearsExperienceDTO> findAllGeologistByExperience(
-            Predicate<GeologistYearsExperienceDTO> geologistYearsExperienceDTOPredicate){
+    public List<GeologistYearsExperienceDTO> findAllGeologistByExperience(Double minYears) {
         return showAllGeologists().stream()
                 .map(geologistMapper::toDto)
-                .filter(g -> g.getYearsOfExperience() > 5)
+                .filter(g -> g.getYearsOfExperience() > minYears)
                 .collect(Collectors.toList());
     }
+
+
 
 
 

@@ -1,6 +1,7 @@
 package com.example.study_service.controllers;
 
 import com.example.study_service.dtos.PatchStudy;
+import com.example.study_service.dtos.StudyAndGeologistDTO;
 import com.example.study_service.models.Study;
 import com.example.study_service.service.StudyService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -57,7 +58,12 @@ public class StudyController {
     }
 
 
-
+    @GetMapping("/{id}/with-geologists")
+    public ResponseEntity<StudyAndGeologistDTO> getStudyWithGeologists(
+            @PathVariable("id") Long idStudy) {
+        StudyAndGeologistDTO result = studyService.showStudyAndGeologist(idStudy);
+        return ResponseEntity.ok(result);
+    }
 
 
 

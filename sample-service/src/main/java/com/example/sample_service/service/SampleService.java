@@ -1,7 +1,10 @@
 package com.example.sample_service.service;
 
 import com.example.sample_service.dtos.PatchSampleDTO;
+import com.example.sample_service.dtos.SampleAndStudyDTO;
+import com.example.sample_service.dtos.StudyDTO;
 import com.example.sample_service.exeption.ResourceNotFoundException;
+import com.example.sample_service.feingclient.StudyClient;
 import com.example.sample_service.models.Sample;
 import com.example.sample_service.repository.SampleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +19,9 @@ import java.util.stream.Collectors;
 public class SampleService {
     @Autowired
     private SampleRepository sampleRepository;
+
+    @Autowired
+    private StudyClient studyClient;
 
     //Create samples
     public List<Sample> createSample(List<Sample> sampleList){
@@ -92,6 +98,16 @@ public class SampleService {
                 .collect(Collectors.toList());
         return samples;
     }
+
+    //Show sample with studies:
+    public SampleAndStudyDTO showSampleWithStudy(Long idSample){
+        Sample sample= showSampleById(idSample);
+        StudyDTO study= studyClient.getStudyById(sample.getIdStudy());
+
+        return new SampleAndStudyDTO(sample, study);
+
+    }
+
 
 
 

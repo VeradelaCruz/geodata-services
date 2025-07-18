@@ -1,6 +1,7 @@
 package com.example.sample_service.controller;
 
 import com.example.sample_service.dtos.PatchSampleDTO;
+import com.example.sample_service.dtos.SampleAndStudyDTO;
 import com.example.sample_service.models.Sample;
 import com.example.sample_service.service.SampleService;
 import jakarta.validation.Valid;
@@ -74,6 +75,11 @@ public class SampleController {
         return ResponseEntity.ok(list);
     }
 
+    @GetMapping("/getSampleAndStudy/{idSample}")
+    public ResponseEntity<SampleAndStudyDTO> getSampleAndStudy(@PathVariable Long idSample){
+        SampleAndStudyDTO sampleAndStudyDTO= sampleService.showSampleWithStudy(idSample);
+        return ResponseEntity.ok(sampleAndStudyDTO);
+    }
 
 }
 

@@ -1,8 +1,10 @@
 package com.example.geologist_service.controller;
 
+import com.example.geologist_service.dtos.GeologistDTO;
 import com.example.geologist_service.dtos.GeologistYearsExperienceDTO;
 import com.example.geologist_service.dtos.PatchGeologist;
 import com.example.geologist_service.exeption.ResourceNotFoundException;
+import com.example.geologist_service.mapper.GeologistMapper;
 import com.example.geologist_service.models.Geologist;
 import com.example.geologist_service.service.GeologistService;
 import jakarta.validation.Valid;
@@ -11,10 +13,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.nio.DoubleBuffer;
+
 import java.util.List;
 import java.util.function.Predicate;
-import java.util.stream.Collectors;
+
 
 @RestController
 @RequestMapping("/geologist")
@@ -22,6 +24,9 @@ public class GeologistController {
 
     @Autowired
     private GeologistService geologistService;
+
+    @Autowired
+    private GeologistMapper geologistMapper;
 
     //Add geologist:
     @PostMapping("/addGeologist")
@@ -41,6 +46,16 @@ public class GeologistController {
     public ResponseEntity<?> getGeologistById(@PathVariable Long idGeologist) {
             Geologist geologist = geologistService.showGeologistById(idGeologist);
             return ResponseEntity.ok(geologist);
+    }
+
+    //Get geologists by ids
+    @PostMapping("/by-ids")
+    public ResponseEntity<List<GeologistDTO>> getGeologistsByIds(@RequestBody List<Long> ids) {
+        List<Geologist> geologists = geologistService.showGeologistsById(ids);
+
+        List<GeologistDTO> dtos = geologistMapper.toSimpleDtoList(geologists);
+
+        return ResponseEntity.ok(dtos);
     }
 
     //Get geologists sorted by last name:
@@ -78,12 +93,11 @@ public class GeologistController {
 
     @GetMapping("/getGeologistsByYearsOfExperience")
     public List<GeologistYearsExperienceDTO> getGeologistsByYearsOfExperience(
-            @RequestParam Double minYears){
-        Predicate<GeologistYearsExperienceDTO> predicate =
-                dto -> dto.getYearsOfExperience() > minYears;
-        return geologistService.findAllGeologistByExperience(predicate);
+            @RequestParam Double minYears) {
 
+        return geologistService.findAllGeologistByExperience(minYears);
     }
+
 
 
 

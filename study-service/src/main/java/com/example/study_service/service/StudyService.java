@@ -1,10 +1,14 @@
 package com.example.study_service.service;
 
+import com.example.study_service.dtos.GeologistDTO;
 import com.example.study_service.dtos.PatchStudy;
+import com.example.study_service.dtos.StudyAndGeologistDTO;
 import com.example.study_service.exception.ResourceNotFoundException;
+import com.example.study_service.feingClient.GeologistClient;
 import com.example.study_service.models.Study;
 import com.example.study_service.repository.StudyRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -16,6 +20,9 @@ import java.util.stream.Collectors;
 public class StudyService {
     @Autowired
     private StudyRepository studyRepository;
+
+    @Autowired
+    private GeologistClient geologistClient;
 
     //Create study:
     public List<Study> createStudy(List<Study> studyList){
@@ -70,6 +77,7 @@ public class StudyService {
         return studyList;
     }
 
+    //Show studies between 2 dates:
     public List<Study> showBetweenDates(LocalDate minDate, LocalDate maxDate) {
         return showAllStudies()
                 .stream()
@@ -82,6 +90,14 @@ public class StudyService {
                 .collect(Collectors.toList());
     }
 
+
+    //Show studies and geologists:
+    public StudyAndGeologistDTO showStudyAndGeologist(Long idStudy) {
+        Study study = showStudyById(idStudy);
+        List<GeologistDTO> geologists = geologistClient.getGeologistsByIds(study.getGeologistIds());
+
+        return new StudyAndGeologistDTO(study, geologists);
+    }
 
 
 
