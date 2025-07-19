@@ -1,0 +1,18 @@
+# Java
+*.class
+*.jar
+*.war
+*.ear
+
+# Eclipse / IntelliJ / NetBeans / VSCode
+/.idea/
+/target/
+/bin/
+/out/
+
+# Logs
+*.log
+
+# OS
+.DS_Store
+Thumbs.db
