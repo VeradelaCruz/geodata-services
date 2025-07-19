@@ -126,19 +126,20 @@ Además, cuenta con servicios de infraestructura:
 
 
 
-```bash
+```
 git clone https://github.com/tuUsuario/geodata-services.git
 
-cd geodata-services```
+cd geodata-services
+
+```
 
 
 
 2\\. Levanta los microservicios y servicios de infraestructura en terminales separadas, por ejemplo:
 
-```bash
+```
 
 cd config-server
-
 mvn spring-boot:run
 
 ```

@@ -21,14 +21,17 @@ Antes de comenzar a contribuir, es importante que puedas probar y ejecutar el pr
 ```bash
 # Clonar el repositorio
 git clone https://github.com/tuUsuario/geodata-services.git
+```
 
 # Ingresar al directorio raíz
+```bash
 cd geodata-services
-
+```
 # Ejecutar los microservicios de forma individual (por ejemplo, geologist-service)
+```bash
 cd geologist-service
 ./mvnw spring-boot:run```
-
+```
 También puedes ejecutar los servicios desde tu IDE.
 
 ---
@@ -60,7 +63,7 @@ Para mantener la coherencia y calidad del código:
 1. Haz un fork del proyecto y trabajá en una rama con nombre descriptivo:
 ```bash
 git checkout -b fix-geologist-validation```
-
+```
 1. Escribe un mensaje de commit claro y conciso.  
 2. Abre un **pull request** enlazando el issue correspondiente (si lo hay).  
 3. Asegurate de que tu PR pase las pruebas automáticas (si están configuradas).
@@ -92,7 +95,8 @@ Respuesta:
     "location": "San Juan",
     "startDate": "2025-06-01"
   }
-]```
+]
+```
 
 🙌 Gracias
 Tu participación mejora este proyecto para toda la comunidad.
