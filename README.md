@@ -1,8 +1,8 @@
 # 🌍 Geodata Service - Sistema de Gestión de Estudios Geológicos 🪨
 
-![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)
-![GitHub last commit](https://img.shields.io/github/last-commit/tuUsuario/geodata-services)
-![GitHub issues](https://img.shields.io/github/issues/tuUsuario/geodata-services)
+[![GitHub license](https://img.shields.io/github/license/VeradelaCruz/geodata-services)](https://github.com/VeradelaCruz/geodata-services/blob/main/LICENSE)
+[![GitHub last commit](https://img.shields.io/github/last-commit/VeradelaCruz/geodata-services)](https://github.com/VeradelaCruz/geodata-services/commits)
+[![GitHub issues](https://img.shields.io/github/issues/VeradelaCruz/geodata-services)](https://github.com/VeradelaCruz/geodata-services/issues)
 
 > Aplicación RESTful modular para gestionar estudios geológicos, muestras y geólogos, ideal para empresas de exploración o laboratorios.
 
