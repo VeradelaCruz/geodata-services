@@ -18,11 +18,41 @@ Crear una plataforma modular que permita:
 
 
 
-\- Registrar y administrar \*\*estudios geológicos\*\*  
+\- Registrar y administrar \*\*estudios geológicos\*\*
 
-\- Gestionar las \*\*muestras\*\* de suelo y roca recolectadas  
+\- Gestionar las \*\*muestras\*\* de suelo y roca recolectadas
 
 \- Controlar la información y participación de los \*\*geólogos\*\* involucrados
+
+
+
+---
+
+
+
+\## ✅ Funcionalidades CRUD
+
+
+
+Crear, leer, actualizar y eliminar:
+
+
+
+\- Geólogos
+
+\- Estudios geológicos
+
+\- Muestras
+
+
+
+Otras funcionalidades:
+
+
+
+\- Buscar estudios por ubicación o por nombre del geólogo
+
+\- Listar todas las muestras de un estudio
 
 
 
@@ -38,11 +68,11 @@ El proyecto está organizado en módulos bajo la carpeta raíz `geodata-services
 
 
 
-\- `geologist/` – Servicio para gestionar geólogos  
+\- `geologist-service/` – Servicio para gestionar geólogos
 
-\- `sample/` – Servicio para gestionar muestras  
+\- `sample-service/` – Servicio para gestionar muestras
 
-\- `study/` – Servicio para gestionar estudios geológicos  
+\- `study-service/` – Servicio para gestionar estudios geológicos
 
 
 
@@ -54,11 +84,11 @@ Además, cuenta con servicios de infraestructura:
 
 
 
-\- `config-server/` – Configuración centralizada  
+\- `configGeo-server/` – Configuración centralizada
 
-\- `eureka-server/` – Descubrimiento de servicios  
+\- `eureka-service/` – Descubrimiento de servicios
 
-\- `api-gateway/` – Punto de entrada unificado  
+\- `api-gateway/` – Punto de entrada unificado
 
 
 
@@ -70,17 +100,17 @@ Además, cuenta con servicios de infraestructura:
 
 
 
-\- Java 11+  
+\- Java 11+
 
-\- Spring Boot  
+\- Spring Boot
 
-\- Spring Cloud (Eureka, Config Server, API Gateway)  
+\- Spring Cloud (Eureka, Config Server, API Gateway)
 
-\- Maven  
+\- Maven
 
-\- RESTful APIs  
+\- RESTful APIs
 
-\- Git / GitHub  
+\- Git / GitHub
 
 
 
@@ -96,11 +126,110 @@ Además, cuenta con servicios de infraestructura:
 
 
 
-&nbsp;  ```bash
+```bash
+git clone https://github.com/tuUsuario/geodata-services.git
 
-&nbsp;  git clone https://github.com/tuUsuario/geodata-services.git
+cd geodata-services```
 
-&nbsp;  cd geodata-services```
 
-&nbsp;	
+
+2\\. Levanta los microservicios y servicios de infraestructura en terminales separadas, por ejemplo:
+
+```bash
+
+cd config-server
+
+mvn spring-boot:run
+
+```
+
+
+
+3\. El API Gateway estará disponible en `http://localhost:8083`, desde donde podrás consumir las APIs.
+
+
+
+---
+
+\## 📝 Modifica este README
+
+
+
+Si quieres mejorar la documentación o añadir ejemplos usando HTML, CSS o JavaScript, ¡estás más que invitado a hacerlo!
+
+
+
+Este archivo `README.md` es el primer punto de contacto para colaboradores y usuarios, así que cualquier mejora, ya sea con texto, formato o código, será bienvenida.
+
+
+
+Si prefieres, simplemente modifica el archivo directamente y envía un pull request.
+
+
+
+---
+
+
+
+\## 🤝 Cómo contribuir
+
+
+
+¡Gracias por tu interés en contribuir a este proyecto! 🛠️  
+
+Valoramos mucho el aporte de la comunidad y creemos que juntos podemos hacerlo más sólido, útil y profesional.
+
+
+
+Antes de comenzar, te recomendamos leer nuestra \[Guía de Contribución](CONTRIBUTING.md).  
+
+Allí encontrarás:
+
+
+
+\- Cómo clonar y ejecutar el proyecto localmente.
+
+\- Estándares de código y buenas prácticas.
+
+\- Cómo crear issues y enviar pull requests.
+
+\- Recomendaciones para documentar nuevas funcionalidades.
+
+
+
+No importa si eres principiante o experto, ¡toda mejora suma! Ya sea corrigiendo errores, mejorando la documentación, agregando funcionalidades o simplemente haciendo sugerencias.
+
+
+
+---
+
+
+
+\## 📄 Licencia
+
+
+
+Este proyecto está licenciado bajo la \*\*MIT License\*\*. Consulta el archivo \[LICENSE](LICENSE.txt) para más detalles.
+
+
+
+---
+
+
+
+\## 📫 Contacto
+
+
+
+Para preguntas o sugerencias, abre un issue o contáctame vía GitHub.
+
+
+
+---
+
+
+
+¡Gracias por interesarte en Geodata Service! 🎉
+
+ 
 
