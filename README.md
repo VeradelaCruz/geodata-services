@@ -1,152 +1,119 @@
-\# 🌍 Geodata Service - Sistema de Gestión de Estudios Geológicos 🪨
+# 🌍 Geodata Service - Sistema de Gestión de Estudios Geológicos 🪨
 
-
+![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)
+![GitHub last commit](https://img.shields.io/github/last-commit/tuUsuario/geodata-services)
+![GitHub issues](https://img.shields.io/github/issues/tuUsuario/geodata-services)
 
 > Aplicación RESTful modular para gestionar estudios geológicos, muestras y geólogos, ideal para empresas de exploración o laboratorios.
 
-
-
 ---
 
-
-
-\## 🎯 Objetivo
-
-
+## 🎯 Objetivo
 
 Crear una plataforma modular que permita:
 
-
-
-\- Registrar y administrar \*\*estudios geológicos\*\*
-
-\- Gestionar las \*\*muestras\*\* de suelo y roca recolectadas
-
-\- Controlar la información y participación de los \*\*geólogos\*\* involucrados
-
-
+- Registrar y administrar **estudios geológicos**
+- Gestionar las **muestras** de suelo y roca recolectadas
+- Controlar la información y participación de los **geólogos** involucrados
 
 ---
 
-
-
-\## ✅ Funcionalidades CRUD
-
-
+## ✅ Funcionalidades CRUD
 
 Crear, leer, actualizar y eliminar:
 
-
-
-\- Geólogos
-
-\- Estudios geológicos
-
-\- Muestras
-
-
+- Geólogos
+- Estudios geológicos
+- Muestras
 
 Otras funcionalidades:
 
-
-
-\- Buscar estudios por ubicación o por nombre del geólogo
-
-\- Listar todas las muestras de un estudio
-
-
+- Buscar estudios por ubicación o por nombre del geólogo
+- Listar todas las muestras de un estudio
 
 ---
 
-
-
-\## 📁 Estructura del Proyecto
-
-
+## 📁 Estructura del Proyecto
 
 El proyecto está organizado en módulos bajo la carpeta raíz `geodata-services`:
 
-
-
-\- `geologist-service/` – Servicio para gestionar geólogos
-
-\- `sample-service/` – Servicio para gestionar muestras
-
-\- `study-service/` – Servicio para gestionar estudios geológicos
-
-
+- `geologist-service/` – Servicio para gestionar geólogos  
+- `sample-service/` – Servicio para gestionar muestras  
+- `study-service/` – Servicio para gestionar estudios geológicos  
 
 Cada módulo funciona como un microservicio Spring Boot independiente.
 
-
-
 Además, cuenta con servicios de infraestructura:
 
+- `config-server/` – Configuración centralizada  
+- `eureka-service/` – Descubrimiento de servicios  
+- `api-gateway/` – Punto de entrada unificado  
 
+---
 
-\- `configGeo-server/` – Configuración centralizada
+## ⚙️ Tecnologías usadas
 
-\- `eureka-service/` – Descubrimiento de servicios
-
-\- `api-gateway/` – Punto de entrada unificado
-
+- Java 11+  
+- Spring Boot  
+- Spring Cloud (Eureka, Config Server, API Gateway)  
+- Maven  
+- RESTful APIs  
+- Git / GitHub  
 
 
 ---
 
+## 🚀 Instalación y uso
 
-
-\## ⚙️ Tecnologías usadas
-
-
-
-\- Java 11+
-
-\- Spring Boot
-
-\- Spring Cloud (Eureka, Config Server, API Gateway)
-
-\- Maven
-
-\- RESTful APIs
-
-\- Git / GitHub
-
-
-
----
-
-
-
-\## 🚀 Instalación y uso
-
-
-
-1\. Clona este repositorio:
-
-
+1. Clona este repositorio:
 
 ```
 git clone https://github.com/tuUsuario/geodata-services.git
-
 cd geodata-services
-
 ```
 
-
-
-2\\. Levanta los microservicios y servicios de infraestructura en terminales separadas, por ejemplo:
+2. Levanta los microservicios y servicios de infraestructura en terminales separadas, por ejemplo:
 
 ```
-
+# Config Server
 cd config-server
 mvn spring-boot:run
+```
 
+```
+# Eureka Service
+cd ../eureka-service
+mvn spring-boot:run
+```
+
+```
+# API Gateway
+cd ../api-gateway
+mvn spring-boot:run
+```
+
+```
+# Geologist service
+cd ../geologist-service
+mvn spring-boot:run
+```
+
+```
+# Sample service
+cd ../sample-service
+mvn spring-boot:run
+```
+
+```
+# Study service
+cd ../study-service
+mvn spring-boot:run
 ```
 
 
 
-3\. El API Gateway estará disponible en `http://localhost:8083`, desde donde podrás consumir las APIs.
+
+3. El API Gateway estará disponible en `http://localhost:8083`, desde donde podrás consumir las APIs.
 
 
 

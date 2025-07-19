@@ -1,33 +1,27 @@
 ---
-name: Reporte de Bug 🐛
-about: Usa este formulario para reportar un problema o error en el sistema.
-title: "[BUG]"
+name: 🐛 Reportar un Bug
+about: ¿Encontraste algo que no funciona como debería? ¡Cuéntanoslo!
+title: "[BUG] Breve descripción del problema"
 labels: bug
 assignees: ''
 
 ---
 
-**Describe el problema**
+# 🐞 Reporte de Bug
 
-Una descripción clara y concisa del error que encontraste.
+## Descripción del problema
 
-**Para reproducir**
+Queremos conocer qué no está funcionando como debería en la aplicación. Por favor, sé lo más claro y detallado posible para que podamos entender el fallo, reproducirlo y corregirlo rápidamente.
 
-Pasos para reproducir el comportamiento:
+> **Ejemplo:**  
+> Al intentar crear un nuevo geólogo desde el formulario, la aplicación lanza un error 500 y no permite guardar los datos.
 
-1. Ir a '...'
-2. Hacer '....'
-3. Ver el error
+---
 
-**Comportamiento esperado**
+## Pasos para reproducir el error
 
-Describe qué esperabas que sucediera.
+Para ayudarnos a reproducir el problema, describe paso a paso qué hiciste hasta que encontraste el fallo. Esto es fundamental para poder identificar la causa con precisión.
 
-**Screenshots**
-
-Si es aplicable, agrega capturas de pantalla para ayudar a explicar el problema.
-
-**Información adicional**
-
-Agrega cualquier otra información relevante, como versión del sistema, logs, etc.
-
+> **Ejemplo:**  
+> 1. Accedí al formulario para crear un nuevo geólogo (`/geologists/new`).  
+> 2. Completé to

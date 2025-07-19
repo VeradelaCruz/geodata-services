@@ -30,7 +30,7 @@ cd geodata-services
 # Ejecutar los microservicios de forma individual (por ejemplo, geologist-service)
 ```bash
 cd geologist-service
-./mvnw spring-boot:run```
+./mvnw spring-boot:run
 ```
 También puedes ejecutar los servicios desde tu IDE.
 
@@ -62,7 +62,7 @@ Para mantener la coherencia y calidad del código:
 
 1. Haz un fork del proyecto y trabajá en una rama con nombre descriptivo:
 ```bash
-git checkout -b fix-geologist-validation```
+git checkout -b fix-geologist-validation
 ```
 1. Escribe un mensaje de commit claro y conciso.  
 2. Abre un **pull request** enlazando el issue correspondiente (si lo hay).  
