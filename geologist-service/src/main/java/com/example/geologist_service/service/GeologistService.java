@@ -34,7 +34,7 @@ public class GeologistService {
     //Show geologist by id:
     public Geologist showGeologistById(Long idGeologist) {
         return geologistRepository.findById(idGeologist)
-                .orElseThrow(() -> new ResourceNotFoundException("Geologist not found with id " + idGeologist));
+                .orElseThrow(() -> new ResourceNotFoundException("Geologist not found"));
     }
 
     //Show geologists by id:
