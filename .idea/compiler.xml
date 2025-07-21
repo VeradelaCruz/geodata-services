@@ -14,7 +14,14 @@
         <module name="eureka-service" />
         <module name="geologist-service" />
       </profile>
-      <profile name="Annotation profile for study-service" enabled="true">
+      <profile name="Maven default annotation processors profile" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <module name="configGeo-server" />
+        <module name="api-gateway" />
+      </profile>
+      <profile name="Annotation profile for sample-service" enabled="true">
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
@@ -23,13 +30,6 @@
         </processorPath>
         <module name="study-service" />
         <module name="sample-service" />
-      </profile>
-      <profile name="Maven default annotation processors profile" enabled="true">
-        <sourceOutputDir name="target/generated-sources/annotations" />
-        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
-        <outputRelativeToContentRoot value="true" />
-        <module name="configGeo-server" />
-        <module name="api-gateway" />
       </profile>
     </annotationProcessing>
   </component>

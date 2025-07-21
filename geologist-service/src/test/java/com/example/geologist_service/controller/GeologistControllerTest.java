@@ -93,7 +93,7 @@ public class GeologistControllerTest {
         when(geologistService.showAllGeologists()).thenReturn(list);
 
         // Act + Assert
-        mockMvc.perform(get("/geologist/getAllGeologists") // <- get(), no "/getAllGeologists"
+        mockMvc.perform(get("/geologist/getAllGeologists")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", Matchers.hasSize(2)))
