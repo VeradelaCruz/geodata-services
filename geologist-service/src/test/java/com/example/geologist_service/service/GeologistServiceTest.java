@@ -7,6 +7,7 @@ import com.example.geologist_service.mapper.GeologistMapper;
 import com.example.geologist_service.models.Geologist;
 import com.example.geologist_service.repository.GeologistRepository;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -31,6 +32,7 @@ public class GeologistServiceTest {
     private GeologistService geologistService;
 
     @Test
+    @DisplayName("Test para buscar un geólogo por id")
     void testShowGeologistById_WhenFound(){
         //Arrange
         Geologist geologist = new Geologist();
@@ -47,6 +49,7 @@ public class GeologistServiceTest {
     }
 
     @Test
+    @DisplayName("Test para buscar un geólogo por id si no lo encuentra")
     void  testShowGeologistById_ShouldThrowException(){
         //Arrange
         Geologist geologist = new Geologist();
@@ -61,6 +64,7 @@ public class GeologistServiceTest {
     }
 
     @Test
+    @DisplayName("Test para buscar un geólogo por apellido")
     void showGeologistSortedByLastName_WhenFound(){
         //Arrange: una lista NO ordenada
         Geologist g1 = new Geologist();
@@ -85,6 +89,7 @@ public class GeologistServiceTest {
     }
 
     @Test
+    @DisplayName("Test para eliminar un geólogo por id")
     void  removeGeologistById_ShouldReturnVoid(){
         //Arrange:
         Long id =1L;
@@ -100,6 +105,7 @@ public class GeologistServiceTest {
     }
 
     @Test
+    @DisplayName("Test para modificar un geólogo por id")
     void patchGeologist_ShouldReturnUpdatedGeologist(){
         //Arrange
         Geologist geologist= new Geologist();
@@ -127,6 +133,7 @@ public class GeologistServiceTest {
     }
 
     @Test
+    @DisplayName("Test para ver una lista de geólogos por orden de experiencia")
     void findAllGeologistByExperience_ShouldReturnFilteredGeologistList() {
         // Arrange
         Geologist g1 = new Geologist();
