@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.time.LocalDate;
@@ -28,6 +29,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WebMvcTest(SampleController.class)
+@ActiveProfiles("test")
 public class SampleTestController {
     @Autowired
     private MockMvc mockMvc;
@@ -183,6 +185,37 @@ public class SampleTestController {
                         .content(new ObjectMapper().writeValueAsString(patchSample)))
                 .andExpect(status().isOk())
                 .andExpect(content().string("Sample updated."));
+    }
+
+    @Test
+    @DisplayName("Llama al método get para mostrar una lista de todas muestras")
+    void getSamplesSortedByMeasurement_ShouldReturnAList() throws Exception {
+        //Arrange
+        Sample sample1 = new Sample();
+        sample1.setSampleType(SampleType.ROCK);
+        sample1.setMeasurementValue(10.5);
+        sample1.setIdStudy(1L);
+
+        Sample sample2 = new Sample();
+        sample2.setSampleType(SampleType.SOIL);
+        sample2.setMeasurementValue(5.0);
+        sample2.setIdStudy(2L);
+
+        List<Sample> sampleList = List.of(sample1, sample2);
+
+        Mockito.when(sampleService.showSamplesSortedByMeasurement()).thenReturn(sampleList);
+
+        //Act + assert
+        mockMvc.perform(get("/sample/sorted/byMeasurement")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(sampleList)))
+                .andExpect(jsonPath("$.length()").value(2))  // Verifica tamaño de la lista
+                .andExpect(jsonPath("$[0].sampleType").value("ROCK"))
+                .andExpect(jsonPath("$[0].measurementValue").value(10.5))
+                .andExpect(jsonPath("$[0].idStudy").value(1))
+                .andExpect(jsonPath("$[1].sampleType").value("SOIL"))
+                .andExpect(jsonPath("$[1].measurementValue").value(5.0))
+                .andExpect(jsonPath("$[1].idStudy").value(2));
     }
 
 

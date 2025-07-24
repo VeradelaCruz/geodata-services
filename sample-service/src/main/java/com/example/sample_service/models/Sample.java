@@ -3,7 +3,6 @@ package com.example.sample_service.models;
 import com.example.sample_service.enums.SampleType;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.DecimalMin;
-import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
