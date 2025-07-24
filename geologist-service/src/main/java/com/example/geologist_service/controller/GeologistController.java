@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 
 
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 
 @RestController
@@ -28,11 +29,13 @@ public class GeologistController {
     private GeologistMapper geologistMapper;
 
     //Add geologist:
-    @PostMapping("/addGeologist")
-    public List<Geologist> addGeologist(@RequestBody List<Geologist> geologists){
-        List savedList= geologistService.createGeologist(geologists);
-        return savedList;
+    @PostMapping("/geologists")
+    public CompletableFuture<ResponseEntity<List<Geologist>>> createGeologists(
+            @RequestBody List<Geologist> geologistList) {
+        return geologistService.createGeologist(geologistList)
+                .thenApply(ResponseEntity::ok);
     }
+
 
     //Get all geologists:
     @GetMapping("/getAllGeologists")

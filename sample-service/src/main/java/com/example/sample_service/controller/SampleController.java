@@ -14,7 +14,6 @@ import java.time.LocalDate;
 import java.util.List;
 
 @RestController
-@RequestMapping("/sample")
 public class SampleController {
     @Autowired
     private SampleService sampleService;

@@ -6,14 +6,23 @@ import com.example.geologist_service.exeption.ResourceNotFoundException;
 import com.example.geologist_service.mapper.GeologistMapper;
 import com.example.geologist_service.models.Geologist;
 import com.example.geologist_service.repository.GeologistRepository;
+import io.github.resilience4j.bulkhead.annotation.Bulkhead;
+import io.github.resilience4j.retry.annotation.Retry;
+import io.github.resilience4j.timelimiter.annotation.TimeLimiter;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
 @Service
+@Slf4j
+@Async
 public class GeologistService {
 
     @Autowired
@@ -22,8 +31,19 @@ public class GeologistService {
     private GeologistMapper geologistMapper;
 
     //Create geologist:
-    public List<Geologist> createGeologist(List<Geologist> geologistList){
-        return geologistRepository.saveAll(geologistList);
+    //Aplicando métodos asíncronos
+    @Retry(name = "geologistretry", fallbackMethod = "fallbackCreateGeologist")
+    @Bulkhead(name = "sampleBulkhead", type = Bulkhead.Type.SEMAPHORE)
+    @TimeLimiter(name = "geologistTimeLimiter")
+    @Async
+    public CompletableFuture<List<Geologist>> createGeologist(List<Geologist> geologistList){
+        List<Geologist> saved = geologistRepository.saveAll(geologistList);
+        return CompletableFuture.completedFuture(saved);
+    }
+
+    public CompletableFuture<List<Geologist>> fallbackCreateGeologist(List<Geologist> geologistList, Throwable t){
+        // Lógica fallback, por ejemplo retornar lista vacía o cached data
+        return CompletableFuture.completedFuture(Collections.emptyList());
     }
 
     //Show all geologists:

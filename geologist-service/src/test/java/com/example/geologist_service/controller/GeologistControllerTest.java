@@ -24,6 +24,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -64,7 +65,7 @@ public class GeologistControllerTest {
 
         List<Geologist> list = List.of(g1, g2);
 
-        when(geologistService.createGeologist(anyList())).thenReturn(list);
+        when(geologistService.createGeologist(anyList())).thenReturn(CompletableFuture.completedFuture(list));
 
         // Act & Assert
         mockMvc.perform(post("/geologist/addGeologist")

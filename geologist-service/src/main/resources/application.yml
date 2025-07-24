@@ -1,15 +1,49 @@
 spring:
+  application:
+    name: geologist-service
+
   datasource:
-    url: jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1
-    driverClassName: org.h2.Driver
-    username: sa
-    password:
+    url: jdbc:mysql://localhost:3306/geologists_db
+    username: root
+    password: ""
   jpa:
     hibernate:
-      ddl-auto: create-drop
+      ddl-auto: update
+    database-platform: org.hibernate.dialect.MySQL8Dialect
     show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
 
-  h2:
-    console:
-      enabled: true
-      path: /h2-console
+server:
+  port: 8083
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka
+
+resilience4j:
+  retry:
+    instances:
+      geologistretry:
+        max-attempts: 3
+        wait-duration: 500ms
+        retry-exceptions:
+          - java.util.concurrent.TimeoutException
+          - org.springframework.dao.QueryTimeoutException
+        ignore-exceptions:
+          com.example.geologist_service.exeption.ResourceNotFoundException
+
+
+  bulkhead:
+    instances:
+      sampleBulkhead:
+        max-concurrent-calls: 5
+        max-wait-duration: 0
+
+  timelimiter:
+    instances:
+      geologistTimeLimiter:
+        timeout-duration: 2s
+
