@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class GeologistDTO {
 
-    private Long idGeologist;
+    private String idGeologist;
 
     private String nameGeologist;
 
@@ -28,12 +28,13 @@ public class GeologistDTO {
 
     private Gender gender;
 
+    // Getters y Setters
 
-    public Long getIdGeologist() {
+    public String getIdGeologist() {
         return idGeologist;
     }
 
-    public void setIdGeologist(Long idGeologist) {
+    public void setIdGeologist(String idGeologist) {
         this.idGeologist = idGeologist;
     }
 

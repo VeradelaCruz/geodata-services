@@ -56,11 +56,11 @@ public class GeologistControllerTest {
     void addGeologist_ShouldReturnEntity() throws Exception {
         // Arrange
         Geologist g1 = new Geologist();
-        g1.setIdGeologist(1L);
+        g1.setIdGeologist("1L");
         g1.setLastNameGeologist("Smith");
 
         Geologist g2 = new Geologist();
-        g2.setIdGeologist(2L);
+        g2.setIdGeologist("2L");
         g2.setLastNameGeologist("Jones");
 
         List<Geologist> list = List.of(g1, g2);
@@ -82,11 +82,11 @@ public class GeologistControllerTest {
     void getAllGeologists_ShouldReturnAList() throws Exception {
         // Arrange
         Geologist g1 = new Geologist();
-        g1.setIdGeologist(1L);
+        g1.setIdGeologist("1L");
         g1.setLastNameGeologist("Smith");
 
         Geologist g2 = new Geologist();
-        g2.setIdGeologist(2L);
+        g2.setIdGeologist("2L");
         g2.setLastNameGeologist("Jones");
 
         List<Geologist> list = List.of(g1, g2);
@@ -108,15 +108,15 @@ public class GeologistControllerTest {
     void getGeologistById_ShouldReturnGeologist() throws Exception {
         //Arrange
         Geologist geologist= new Geologist();
-        geologist.setIdGeologist(1L);
+        geologist.setIdGeologist("1L");
 
-        when(geologistService.showGeologistById(1L)).thenReturn(geologist);
+        when(geologistService.showGeologistById("1L")).thenReturn(geologist);
 
         //Act + assert:
-        mockMvc.perform(get("/geologist/getGeologistById/{idGeologist}", 1L)
+        mockMvc.perform(get("/geologist/getGeologistById/{idGeologist}", "1L")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.idGeologist").value(1));
+                .andExpect(jsonPath("$.idGeologist").value("1"));
 
     }
 
@@ -124,11 +124,11 @@ public class GeologistControllerTest {
     @DisplayName("Test que devuelve un geólogo por id si NO encuentra")
     void getGeologistById_ShouldThrowException() throws Exception {
 
-        when(geologistService.showGeologistById(1L))
+        when(geologistService.showGeologistById("1L"))
                 .thenThrow(new ResourceNotFoundException("Geologist not found"));
 
         //Act + assert:
-        mockMvc.perform(get("/geologist/getGeologistById/{idGeologist}", 1L))
+        mockMvc.perform(get("/geologist/getGeologistById/{idGeologist}", "1L"))
                 .andExpect(status().isNotFound())
                 .andExpect(result ->
                 assertTrue(result.getResolvedException() instanceof ResourceNotFoundException))
@@ -140,7 +140,7 @@ public class GeologistControllerTest {
     @DisplayName("Test que devuelve un geologo actualizado")
     void  updateGeologist_ShouldReturnGeologistUpdated() throws Exception{
         //Arrange
-        Long id = 1L;
+        String id = "1L";
         PatchGeologist patchGeologist = new PatchGeologist();
         Geologist geologist= new Geologist();
 
@@ -162,23 +162,23 @@ public class GeologistControllerTest {
     void getGeologistsByYearsOfExperience_ShouldReturnListOfGeologists() throws Exception{
         //Arrange
         GeologistDTO g1 = new GeologistDTO();
-        g1.setIdGeologist(1L);
+        g1.setIdGeologist("1L");
         g1.setLastNameGeologist("Smith");
         g1.setYearsOfExperience(5.0);
 
         GeologistDTO g2 = new GeologistDTO();
-        g2.setIdGeologist(2L);
+        g2.setIdGeologist("2L");
         g2.setLastNameGeologist("Jones");
         g2.setYearsOfExperience(7.0);
         List<GeologistDTO> list = List.of(g1, g2);
 
         GeologistYearsExperienceDTO geoDTO1= new GeologistYearsExperienceDTO();
-        geoDTO1.setIdGeologist(1L);
+        geoDTO1.setIdGeologist("1L");
         geoDTO1.setLastNameGeologist("Smith");
         geoDTO1.setYearsOfExperience(5.0);
 
         GeologistYearsExperienceDTO geoDTO2= new GeologistYearsExperienceDTO();
-        geoDTO2.setIdGeologist(2L);
+        geoDTO2.setIdGeologist("2L");
         geoDTO2.setLastNameGeologist("Jones");
         geoDTO2.setYearsOfExperience(7.0);
 

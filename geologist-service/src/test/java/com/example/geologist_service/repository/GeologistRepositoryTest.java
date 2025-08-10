@@ -1,10 +1,8 @@
 package com.example.geologist_service.repository;
 
 import com.example.geologist_service.enums.Gender;
-import com.example.geologist_service.exeption.ResourceNotFoundException;
 import com.example.geologist_service.models.Geologist;
 import com.example.geologist_service.service.GeologistService;
-import jakarta.persistence.PersistenceException;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
@@ -19,9 +17,7 @@ import org.springframework.test.context.ActiveProfiles;
 import java.util.List;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.Mockito.when;
 
 @DataJpaTest
 @ActiveProfiles("test")
@@ -135,7 +131,7 @@ public class GeologistRepositoryTest {
     @DisplayName("Teste que prueba mostrar un geólogo por id si NO lo encuentra")
     void showGeologistById_ShouldReturnException(){
         // Arrange
-        Long invalidId = 999L;
+        String invalidId = "999L";
 
         // Act
         Optional<Geologist> result = geologistRepository.findById(invalidId);

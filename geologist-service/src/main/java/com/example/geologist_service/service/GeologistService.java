@@ -52,13 +52,13 @@ public class GeologistService {
     }
 
     //Show geologist by id:
-    public Geologist showGeologistById(Long idGeologist) {
+    public Geologist showGeologistById(String idGeologist) {
         return geologistRepository.findById(idGeologist)
                 .orElseThrow(() -> new ResourceNotFoundException("Geologist not found"));
     }
 
     //Show geologists by id:
-    public List<Geologist> showGeologistsById( List<Long> ids){
+    public List<Geologist> showGeologistsById(List<String> ids){
         return geologistRepository.findAllById(ids);
     }
 
@@ -70,7 +70,7 @@ public class GeologistService {
     }
 
     //Remove a Geologist:
-    public void removeGeologistById(Long idGeologist){
+    public void removeGeologistById(String idGeologist){
         if (!geologistRepository.existsById(idGeologist)){
             throw new ResourceNotFoundException("Geologist not found with id " + idGeologist);
         }
@@ -78,7 +78,7 @@ public class GeologistService {
     }
 
     //Partial update:
-    public Geologist patchGeologist(Long idGeologist, PatchGeologist patchGeologist){
+    public Geologist patchGeologist(String idGeologist, PatchGeologist patchGeologist){
         Geologist geologist= showGeologistById(idGeologist);
 
         if(patchGeologist.getEmailGeologist() != null){

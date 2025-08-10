@@ -36,12 +36,12 @@ public class GeologistServiceTest {
     void testShowGeologistById_WhenFound(){
         //Arrange
         Geologist geologist = new Geologist();
-        geologist.setIdGeologist(1L);
+        geologist.setIdGeologist("1L");
 
-        Mockito.when(geologistRepository.findById(1L)).thenReturn(Optional.of(geologist));
+        Mockito.when(geologistRepository.findById("1L")).thenReturn(Optional.of(geologist));
 
         //Act
-        Geologist result = geologistService.showGeologistById(1L);
+        Geologist result = geologistService.showGeologistById("1L");
 
         //Assert
         Assertions.assertNotNull(result);
@@ -53,13 +53,13 @@ public class GeologistServiceTest {
     void  testShowGeologistById_ShouldThrowException(){
         //Arrange
         Geologist geologist = new Geologist();
-        geologist.setIdGeologist(1L);
+        geologist.setIdGeologist("1L");
 
-        Mockito.when(geologistRepository.findById(1L))
+        Mockito.when(geologistRepository.findById("1L"))
                 .thenReturn(Optional.empty());
 
         Assertions.assertThrows(ResourceNotFoundException.class, () -> {
-            geologistService.showGeologistById(1L);
+            geologistService.showGeologistById("1L");
         });
     }
 
@@ -92,12 +92,12 @@ public class GeologistServiceTest {
     @DisplayName("Test para eliminar un geólogo por id")
     void  removeGeologistById_ShouldReturnVoid(){
         //Arrange:
-        Long id =1L;
+        String id ="1L";
 
-        Mockito.when(geologistRepository.existsById(1L)).thenReturn(true);
+        Mockito.when(geologistRepository.existsById("1L")).thenReturn(true);
 
         //Act
-        geologistService.removeGeologistById(1L);
+        geologistService.removeGeologistById("1L");
 
         //Assert
         Mockito.verify(geologistRepository).deleteById(id);
@@ -109,25 +109,25 @@ public class GeologistServiceTest {
     void patchGeologist_ShouldReturnUpdatedGeologist(){
         //Arrange
         Geologist geologist= new Geologist();
-        geologist.setIdGeologist(1L);
+        geologist.setIdGeologist("1L");
         geologist.setEmailGeologist("example@gmail.com");
 
         PatchGeologist patchGeologist= new PatchGeologist();
         patchGeologist.setEmailGeologist("example99@gmail.com");
 
-        Mockito.when(geologistRepository.findById(1L)).thenReturn(Optional.of(geologist));
+        Mockito.when(geologistRepository.findById("1L")).thenReturn(Optional.of(geologist));
         Mockito.when(geologistRepository.save(Mockito.any(Geologist.class)))
                 .thenAnswer(inv -> inv.getArgument(0));
 
         //Act
-        Geologist updatedPatch= geologistService.patchGeologist(1L, patchGeologist);
+        Geologist updatedPatch= geologistService.patchGeologist("1L", patchGeologist);
 
         //Assert
-        Assertions.assertEquals(1L, updatedPatch.getIdGeologist());
+        Assertions.assertEquals("1L", updatedPatch.getIdGeologist());
         Assertions.assertEquals("example99@gmail.com", updatedPatch.getEmailGeologist());
 
         //Very
-        Mockito.verify(geologistRepository).findById(1L);
+        Mockito.verify(geologistRepository).findById("1L");
         Mockito.verify(geologistRepository).save(Mockito.any(Geologist.class));
 
     }
