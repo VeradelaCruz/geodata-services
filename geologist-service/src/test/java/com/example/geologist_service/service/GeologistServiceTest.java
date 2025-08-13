@@ -45,7 +45,7 @@ public class GeologistServiceTest {
 
         //Assert
         Assertions.assertNotNull(result);
-        Assertions.assertEquals(1L, result.getIdGeologist());
+        Assertions.assertEquals("1L", result.getIdGeologist());
     }
 
     @Test

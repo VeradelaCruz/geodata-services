@@ -1,8 +1,6 @@
 package com.example.study_service.dtos;
 
 import com.example.study_service.enums.StudyStatus;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -20,7 +18,6 @@ public class PatchStudy {
 
     private LocalDate endDate;
 
-    @Enumerated(EnumType.STRING)
     private StudyStatus studyStatus;
 
 }

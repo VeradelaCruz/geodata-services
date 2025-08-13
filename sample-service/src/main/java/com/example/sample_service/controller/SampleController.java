@@ -14,6 +14,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 @RestController
+@RequestMapping("/sample")
 public class SampleController {
     @Autowired
     private SampleService sampleService;
@@ -33,7 +34,7 @@ public class SampleController {
 
     //Get sample by id
     @GetMapping("/id/{idSample}")
-    public ResponseEntity<Sample> getSampleById(@PathVariable Long idSample) {
+    public ResponseEntity<Sample> getSampleById(@PathVariable String idSample) {
         Sample sample = sampleService.showSampleById(idSample);
         return ResponseEntity.ok(sample);
     }
@@ -41,13 +42,13 @@ public class SampleController {
 
     //Delete sample
     @DeleteMapping("/delete/id/{idSample}")
-    public ResponseEntity<String> deleteSample(@PathVariable Long idSample){
+    public ResponseEntity<String> deleteSample(@PathVariable String idSample){
         sampleService.removeSampleById(idSample);
         return ResponseEntity.ok("Sample with id " + idSample + " has been removed successfully.");
     }
 
     @PatchMapping("/update/{idSample}")
-    public ResponseEntity<String> updateSample(@PathVariable Long idSample,
+    public ResponseEntity<String> updateSample(@PathVariable String idSample,
                                                @Valid @RequestBody PatchSampleDTO patchSampleDTO) {
         sampleService.changeSample(idSample, patchSampleDTO);
         return ResponseEntity.ok("Sample updated.");
@@ -75,7 +76,7 @@ public class SampleController {
     }
 
     @GetMapping("/getSampleAndStudy/{idSample}")
-    public ResponseEntity<SampleAndStudyDTO> getSampleAndStudy(@PathVariable Long idSample){
+    public ResponseEntity<SampleAndStudyDTO> getSampleAndStudy(@PathVariable String idSample){
         SampleAndStudyDTO sampleAndStudyDTO= sampleService.showSampleWithStudy(idSample);
         return ResponseEntity.ok(sampleAndStudyDTO);
     }

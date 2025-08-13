@@ -1,7 +1,7 @@
 package com.example.sample_service.repository;
 
 import com.example.sample_service.models.Sample;
-import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.mongodb.repository.MongoRepository;
 
-public interface SampleRepository extends JpaRepository<Sample, Long> {
+public interface SampleRepository extends MongoRepository<Sample, String> {
 }

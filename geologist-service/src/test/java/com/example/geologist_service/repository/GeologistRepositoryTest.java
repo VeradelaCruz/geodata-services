@@ -2,16 +2,12 @@ package com.example.geologist_service.repository;
 
 import com.example.geologist_service.enums.Gender;
 import com.example.geologist_service.models.Geologist;
-import com.example.geologist_service.service.GeologistService;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
-import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest;
 import org.springframework.test.context.ActiveProfiles;
 
 import java.util.List;
@@ -19,18 +15,11 @@ import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-@DataJpaTest
+@DataMongoTest
 @ActiveProfiles("test")
-@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 public class GeologistRepositoryTest {
     @Autowired
     private GeologistRepository geologistRepository;
-
-    @Autowired
-    private TestEntityManager entityManager;
-
-    @MockBean
-    private GeologistService geologistService;
 
 
     @AfterEach
@@ -39,9 +28,8 @@ public class GeologistRepositoryTest {
     }
 
     @Test
-    @DisplayName("Prueba que crea un geólogo en el repositorio")
-    void createGeologist_ShouldReturnListOfGeologist(){
-        //Arrange
+    @DisplayName("Crear geólogos")
+    void createGeologist_ShouldReturnListOfGeologist() {
         Geologist g1 = new Geologist();
         g1.setLastNameGeologist("Smith");
         g1.setNameGeologist("John");
@@ -52,7 +40,6 @@ public class GeologistRepositoryTest {
 
         Geologist g2 = new Geologist();
         g2.setLastNameGeologist("Jones");
-
         g2.setNameGeologist("Alice");
         g2.setSpecialization("Petrology");
         g2.setEmailGeologist("alice.jones@example.com");
@@ -61,10 +48,8 @@ public class GeologistRepositoryTest {
 
         List<Geologist> list = List.of(g1, g2);
 
-        //Act
-        List<Geologist> savedList= geologistRepository.saveAll(list);
+        List<Geologist> savedList = geologistRepository.saveAll(list);
 
-        //Assert
         Assertions.assertEquals(2, savedList.size());
         Assertions.assertEquals("Smith", savedList.get(0).getLastNameGeologist());
         Assertions.assertEquals("Jones", savedList.get(1).getLastNameGeologist());
@@ -104,28 +89,28 @@ public class GeologistRepositoryTest {
 
     @Test
     @DisplayName("Teste que prueba mostrar un geólogo por id")
-    void showGeologistById_ShouldReturnGeologist(){
-        //Arrange
+    void showGeologistById_ShouldReturnGeologist() {
+        // Arrange
         Geologist g1 = new Geologist();
         g1.setNameGeologist("Alice");
         g1.setLastNameGeologist("Smith");
         g1.setEmailGeologist("alice.smith@example.com");
         g1.setSpecialization("Sedimentology");
         g1.setYearsOfExperience(6.0);
-        g1.setGender(Gender.FEMALE); // si aplica
+        g1.setGender(Gender.FEMALE);
 
-        //Persist
-        Geologist persist = entityManager.persist(g1);
-        entityManager.flush(); // fuerza sincronización con la base de datos
+        // Persist usando el repositorio
+        Geologist persist = geologistRepository.save(g1);
 
-        //Act
-        Optional<Geologist> result= geologistRepository.findById(g1.getIdGeologist());
+        // Act
+        Optional<Geologist> result = geologistRepository.findById(persist.getIdGeologist());
 
-        //Assert
+        // Assert
         assertTrue(result.isPresent());
         Assertions.assertEquals(persist.getIdGeologist(), result.get().getIdGeologist());
         Assertions.assertEquals(persist.getLastNameGeologist(), result.get().getLastNameGeologist());
     }
+
 
     @Test
     @DisplayName("Teste que prueba mostrar un geólogo por id si NO lo encuentra")

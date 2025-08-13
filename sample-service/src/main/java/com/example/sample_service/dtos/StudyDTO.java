@@ -9,10 +9,10 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class StudyDTO {
-    private Long idStudy;
+    private String idStudy;
     private String title;
     private String location;
     private String studyStatus;
-    private List<Long> geologistIds;
+    private List<String> geologistIds;
 
 }

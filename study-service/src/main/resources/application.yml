@@ -2,18 +2,9 @@ spring:
   application:
     name: study-service
 
-  datasource:
-    url: jdbc:mysql://localhost:3306/studies_db
-    username: root
-    password: ""
-  jpa:
-    hibernate:
-      ddl-auto: update
-    database-platform: org.hibernate.dialect.MySQL8Dialect
-    show-sql: true
-    properties:
-      hibernate:
-        format_sql: true
+  data:
+    mongodb:
+      uri: mongodb://localhost:27017/studies_db
 
 server:
   port: 8082

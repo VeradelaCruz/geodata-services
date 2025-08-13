@@ -34,13 +34,13 @@ public class SampleService {
     }
 
     //Show sample by id:
-     public Sample showSampleById(Long idSample){
+     public Sample showSampleById(String idSample){
         return sampleRepository.findById(idSample)
                 .orElseThrow(()-> new ResourceNotFoundException("Sample with id " + idSample + " not found."));
      }
 
      //Delete a sample
-    public void removeSampleById(Long idSample){
+    public void removeSampleById(String idSample){
        if (!sampleRepository.existsById(idSample)){
            throw  new ResourceNotFoundException("Sample with id " + idSample + " not found.");
        }else {
@@ -49,7 +49,7 @@ public class SampleService {
     }
 
     //Update a sample:
-    public Sample changeSample(Long idSample, PatchSampleDTO patchSampleDTO){
+    public Sample changeSample(String idSample, PatchSampleDTO patchSampleDTO){
         Sample sampleUpdated= showSampleById(idSample);
         if(patchSampleDTO.getSampleType()!= null){
             sampleUpdated.setSampleType(patchSampleDTO.getSampleType());
@@ -100,7 +100,7 @@ public class SampleService {
     }
 
     //Show sample with studies:
-    public SampleAndStudyDTO showSampleWithStudy(Long idSample){
+    public SampleAndStudyDTO showSampleWithStudy(String idSample){
         Sample sample= showSampleById(idSample);
         StudyDTO study= studyClient.getStudyById(sample.getIdStudy());
 

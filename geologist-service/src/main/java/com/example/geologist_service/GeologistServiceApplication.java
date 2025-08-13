@@ -8,7 +8,6 @@ import org.springframework.data.mongodb.repository.config.EnableMongoRepositorie
 @SpringBootApplication
 @EnableFeignClients
 @EnableMongoRepositories(basePackages = "com.example.geologist_service.repository")
-
 public class GeologistServiceApplication {
 
 	public static void main(String[] args) {

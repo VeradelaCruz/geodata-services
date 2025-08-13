@@ -100,26 +100,26 @@ public class SampleTestService {
     void showSampleById_ShouldReturnSample(){
         //Arrange
         Sample sample1= new Sample();
-        sample1.setIdSample(1L);
+        sample1.setIdSample("1L");
 
-        Mockito.when(sampleRepository.findById(1L)).thenReturn(Optional.of(sample1));
+        Mockito.when(sampleRepository.findById("1L")).thenReturn(Optional.of(sample1));
 
         //Act
-        Sample result= sampleService.showSampleById(1L);
+        Sample result= sampleService.showSampleById("1L");
 
         //Assert
         Assertions.assertNotNull(result);
-        Assertions.assertEquals(1L, result.getIdSample());
+        Assertions.assertEquals("1L", result.getIdSample());
 
         //Verify
-        Mockito.verify(sampleRepository).findById(1L);
+        Mockito.verify(sampleRepository).findById("1L");
     }
 
     @Test
     @DisplayName("Debería devolver una muestra por id, si NO existe")
     void showSampleById_ShouldReturnException(){
         //Arrange
-        Long id = 1L;
+        String id = "1L";
         Mockito.when(sampleRepository.findById(id)).thenReturn(Optional.empty());
 
         // Act + Assert
@@ -139,29 +139,29 @@ public class SampleTestService {
     void removeSample_ShouldReturnVoid(){
         //Arrange
         Sample sample1= new Sample();
-        sample1.setIdSample(1L);
+        sample1.setIdSample("1L");
 
-        Mockito.when(sampleRepository.existsById(1L)).thenReturn(true);
+        Mockito.when(sampleRepository.existsById("1L")).thenReturn(true);
 
         //Act
-        sampleService.removeSampleById(1L);
+        sampleService.removeSampleById("1L");
 
         //Verify
-        Mockito.verify(sampleRepository).deleteById(1L);
+        Mockito.verify(sampleRepository).deleteById("1L");
     }
 
     @Test
     @DisplayName("Debería eliminar una muestra, si NO existe")
     void removeSample_ShouldReturnException(){
         //Arrange
-        Long id= 1L;
-        Mockito.when(sampleRepository.existsById(1L)).thenReturn(false);
+        String id= "1L";
+        Mockito.when(sampleRepository.existsById("1L")).thenReturn(false);
 
         //Act
         ResourceNotFoundException exception= Assertions.assertThrows(ResourceNotFoundException.class,
-                ()->sampleService.removeSampleById(1L));
+                ()->sampleService.removeSampleById("1L"));
         //Assert
-        Assertions.assertEquals("Sample with id " + 1L + " not found.", exception.getMessage());
+        Assertions.assertEquals("Sample with id " + id + " not found.", exception.getMessage());
     }
 
     @Test
@@ -303,26 +303,26 @@ public class SampleTestService {
     void showSampleWithStudy_ShouldReturnSampleAndStudyDTO(){
         //Arrange
         Sample sample1= new Sample();
-        sample1.setIdSample(99L);
+        sample1.setIdSample("99L");
         sample1.setSampleType(SampleType.ROCK);
-        sample1.setIdStudy(1L);
+        sample1.setIdStudy("1L");
 
         StudyDTO study= new StudyDTO();
-        study.setIdStudy(1L);
+        study.setIdStudy("1L");
         study.setLocation("Neuquen");
         study.setTitle("Recoleccion de muestras");
         study.setStudyStatus("On going");
-        study.setGeologistIds(new ArrayList<Long>(List.of(1L,2L)));
+        study.setGeologistIds(new ArrayList<String>(List.of("1L","2L")));
 
         SampleAndStudyDTO sampleAndStudy= new SampleAndStudyDTO();
         sampleAndStudy.setSample(sample1);
         sampleAndStudy.setStudyDTO(study);
 
-        Mockito.when(sampleRepository.findById(99L)).thenReturn(Optional.of(sample1));
-        Mockito.when(studyClient.getStudyById(1L)).thenReturn(study);
+        Mockito.when(sampleRepository.findById("99L")).thenReturn(Optional.of(sample1));
+        Mockito.when(studyClient.getStudyById("1L")).thenReturn(study);
 
         //Act
-        SampleAndStudyDTO sampleAndStudyResult = sampleService.showSampleWithStudy(99L);
+        SampleAndStudyDTO sampleAndStudyResult = sampleService.showSampleWithStudy("99L");
 
         //Assert
         Assertions.assertEquals(sampleAndStudy.getSample(), sampleAndStudyResult.getSample());

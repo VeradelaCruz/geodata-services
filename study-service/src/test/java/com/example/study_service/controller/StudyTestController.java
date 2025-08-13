@@ -56,7 +56,7 @@ public class StudyTestController {
         study1.setLocation("Zona 1");
         study1.setStudyStatus(StudyStatus.ONGOING);
 
-        List<Long> idsStudy1= List.of(1L,2L);
+        List<String> idsStudy1= List.of("1L","2L");
         study1.setGeologistIds(idsStudy1);
 
         Study study2 = new Study();
@@ -66,7 +66,7 @@ public class StudyTestController {
         study2.setLocation("Zona 1");
         study2.setStudyStatus(StudyStatus.COMPLETED);
 
-        List<Long> idsStudy2 = List.of(1L,2L);
+        List<String> idsStudy2 = List.of("1L","2L");
         study2.setGeologistIds(idsStudy2);
 
         List<Study> studyList= List.of(study1, study2);
@@ -109,31 +109,31 @@ public class StudyTestController {
     @DisplayName("Debería devolver un estudio por id, si existe")
     void getStudyById_ShouldReturnStudy() throws Exception{
         //Arrange
-        Long id= 1L;
+        String id= "1L";
         Study study= new Study();
         study.setIdStudy(id);
 
         when(studyService.showStudyById(id)).thenReturn(study);
 
         //Act + assert
-        mockMvc.perform(get("/study/id/{idStudy}", 1L)
+        mockMvc.perform(get("/study/id/{idStudy}", "1L")
                         .contentType((MediaType.APPLICATION_JSON)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.idStudy").isNotEmpty())
-                .andExpect(jsonPath("$.idStudy").value(1L));
+                .andExpect(jsonPath("$.idStudy").value("1L"));
     }
 
     @Test
     @DisplayName("Debería devolver un estudio por id, si NO existe")
     void getStudyById_ShouldReturnException() throws Exception{
         //Arrange
-        Long id= 1L;
+        String id= "1L";
 
-        when(studyService.showStudyById(1L))
+        when(studyService.showStudyById("1L"))
                 .thenThrow(new ResourceNotFoundException("Study not found."));
 
         //Act + assert
-        mockMvc.perform(get("/study/id/{idStudy}", 1L))
+        mockMvc.perform(get("/study/id/{idStudy}", "1L"))
                 .andExpect(status().isNotFound())
                 .andExpect(result ->
                         assertTrue(result.getResolvedException() instanceof ResourceNotFoundException))
@@ -145,16 +145,16 @@ public class StudyTestController {
     @DisplayName("Debería devolver un void al eliminar un estudio")
     void deleteStudy_ShouldReturnVoid() throws Exception{
         //Arrange
-        Long id= 1L;
+        String id= "1L";
         Study study= new Study();
         study.setIdStudy(id);
 
         doNothing().when(studyService).removeStudy(id);
 
-        mockMvc.perform(delete("/study/delete/{idStudy}",1L)
+        mockMvc.perform(delete("/study/delete/{idStudy}","1L")
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(content().string("Study with id 1 has been removed successfully."));
+                .andExpect(content().string("Study with id 1L has been removed successfully."));
 
     }
 
@@ -163,7 +163,7 @@ public class StudyTestController {
     void updateStudy_ShouldReturnAStudy() throws Exception{
         //Arrange
         Study studyUpdated = new Study();
-        studyUpdated.setIdStudy(2L);
+        studyUpdated.setIdStudy("2L");
         studyUpdated.setTitle("Búsqueda zona 1");
         studyUpdated.setStartDate(LocalDate.of(2025,3,10));
         studyUpdated.setEndDate(LocalDate.of(2025,10, 20));
@@ -181,7 +181,7 @@ public class StudyTestController {
                 .thenReturn(studyUpdated);
 
         //Act + assert
-        mockMvc.perform(patch("/study/update/{idStudy}", 1L)
+        mockMvc.perform(patch("/study/update/{idStudy}", "1L")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(patchStudy)))
                 .andExpect(status().isOk());
@@ -206,9 +206,8 @@ public class StudyTestController {
 
         //Act + Assert
         mockMvc.perform(get("/study/sorted/byLocation")
-                .contentType(MediaType.APPLICATION_JSON)
-                .contentType(objectMapper.writeValueAsString(studyList)))
+                        .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.studyList", Matchers.hasSize(2)));
+                .andExpect(jsonPath("$", Matchers.hasSize(2)));
     }
 }

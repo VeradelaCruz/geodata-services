@@ -1,25 +1,19 @@
-spring:
-  application:
-    name: api-gateway
-
 server:
   port: 9090
 
----
 spring:
-  config:
-    import: "configserver:"
+  application:
+    name: api-gateway
   cloud:
     config:
       uri: http://localhost:8888
----
-
-spring:
-  cloud:
     gateway:
+      discovery:
+        locator:
+          enabled: true
       routes:
         - id: geologist-service
-          uri: http://localhost:8083
+          uri: lb://geologist-service
           predicates:
             - Path=/geologist/**
           filters:
@@ -29,7 +23,7 @@ spring:
                 fallbackUri: forward:/fallback/geologists
 
         - id: study-service
-          uri: http://localhost:8082
+          uri: lb://study-service
           predicates:
             - Path=/study/**
           filters:
@@ -39,7 +33,7 @@ spring:
                 fallbackUri: forward:/fallback/studies
 
         - id: sample-service
-          uri: http://localhost:8081
+          uri: lb://sample-service
           predicates:
             - Path=/sample/**
           filters:
@@ -48,7 +42,13 @@ spring:
               args:
                 name: sampleCircuitBreaker
                 fallbackUri: forward:/fallback/samples
-          logging:
-            level:
-              org.springframework.cloud.gateway: DEBUG
-              org.springframework.web: DEBUG
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
+
+logging:
+  level:
+    org.springframework.cloud.gateway: DEBUG
+    reactor.netty.http.server.HttpServer: DEBUG

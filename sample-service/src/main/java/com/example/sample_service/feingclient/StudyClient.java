@@ -10,5 +10,5 @@ import java.util.List;
 @FeignClient(name = "study-service", url = "http://localhost:8082")
 public interface StudyClient {
     @GetMapping("/study/id/{idStudy}")
-    public StudyDTO getStudyById(@PathVariable Long idStudy);
+    public StudyDTO getStudyById(@PathVariable String idStudy);
 }

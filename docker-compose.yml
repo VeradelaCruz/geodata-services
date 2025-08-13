@@ -1,0 +1,99 @@
+version: '3.8'
+
+services:
+
+  eureka-server:
+    image: eureka-service:latest
+    build:
+      context: ./eureka-service
+      dockerfile: Dockerfile
+    ports:
+      - "8761:8761"
+    environment:
+      - SPRING_PROFILES_ACTIVE=prod
+    networks:
+      - geodataservices-net
+
+  config-server:
+    image: config-server:latest
+    build:
+      context: ./configGeo-server
+      dockerfile: Dockerfile
+    ports:
+      - "8888:8888"
+    environment:
+      - SPRING_PROFILES_ACTIVE=prod
+    networks:
+      - geodataservices-net
+
+  apigateway:
+    image: apigateway:latest
+    build:
+      context: ./api-gateway
+      dockerfile: Dockerfile
+    ports:
+      - "9090:9090"
+    environment:
+      - SPRING_PROFILES_ACTIVE=prod
+      - EUREKA_SERVER_URI=http://eureka-server:8761/eureka/
+      - CONFIG_SERVER_URI=http://config-server:8888
+    depends_on:
+      - eureka-server
+      - config-server
+    networks:
+      - geodataservices-net
+
+  geologist-service:
+    image: geologist-service:latest
+    build:
+      context: ./geologist-service
+      dockerfile: Dockerfile
+    ports:
+      - "8083:8083"
+    environment:
+      - SPRING_PROFILES_ACTIVE=prod
+      - EUREKA_SERVER_URI=http://eureka-server:8761/eureka/
+      - CONFIG_SERVER_URI=http://config-server:8888
+    depends_on:
+      - eureka-server
+      - config-server
+    networks:
+      - geodataservices-net
+
+  sample-service:
+    image: sample-service:latest
+    build:
+      context: ./sample-service
+      dockerfile: Dockerfile
+    ports:
+      - "8081:8081"
+    environment:
+      - SPRING_PROFILES_ACTIVE=prod
+      - EUREKA_SERVER_URI=http://eureka-server:8761/eureka/
+      - CONFIG_SERVER_URI=http://config-server:8888
+    depends_on:
+      - eureka-server
+      - config-server
+    networks:
+      - geodataservices-net
+
+  study-service:
+    image: study-service:latest
+    build:
+      context: ./study-service
+      dockerfile: Dockerfile
+    ports:
+      - "8082:8082"
+    environment:
+      - SPRING_PROFILES_ACTIVE=prod
+      - EUREKA_SERVER_URI=http://eureka-server:8761/eureka/
+      - CONFIG_SERVER_URI=http://config-server:8888
+    depends_on:
+      - eureka-server
+      - config-server
+    networks:
+      - geodataservices-net
+
+networks:
+  geodataservices-net:
+    driver: bridge

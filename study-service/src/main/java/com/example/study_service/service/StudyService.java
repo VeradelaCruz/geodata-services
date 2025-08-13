@@ -35,20 +35,20 @@ public class StudyService {
     }
 
     //Show studie by id:
-    public Study showStudyById(Long idStudy){
+    public Study showStudyById(String idStudy){
         return studyRepository.findById(idStudy)
                 .orElseThrow(()-> new ResourceNotFoundException("Study with id "+ idStudy + " not found."));
     }
 
     //Delete study:
-    public void removeStudy(Long idStudy){
+    public void removeStudy(String idStudy){
         if(!studyRepository.existsById(idStudy)){
             studyRepository.deleteById(idStudy);
         }
     }
 
     //Patch study:
-    public Study patchStudy(Long idStudy, PatchStudy patchStudy){
+    public Study patchStudy(String idStudy, PatchStudy patchStudy){
         Study studyUpdated= showStudyById(idStudy);
         if(patchStudy.getLocation()!=null){
             studyUpdated.setLocation(patchStudy.getLocation());
@@ -92,7 +92,7 @@ public class StudyService {
 
 
     //Show studies and geologists:
-    public StudyAndGeologistDTO showStudyAndGeologist(Long idStudy) {
+    public StudyAndGeologistDTO showStudyAndGeologist(String idStudy) {
         Study study = showStudyById(idStudy);
         List<GeologistDTO> geologists = geologistClient.getGeologistsByIds(study.getGeologistIds());
 

@@ -1,5 +1,6 @@
 package com.example.geologist_service.controller;
 
+import com.example.geologist_service.config.MongoTestConfig;
 import com.example.geologist_service.dtos.GeologistDTO;
 import com.example.geologist_service.dtos.GeologistYearsExperienceDTO;
 import com.example.geologist_service.dtos.PatchGeologist;
@@ -7,6 +8,7 @@ import com.example.geologist_service.exeption.GlobalExceptionHandler;
 import com.example.geologist_service.exeption.ResourceNotFoundException;
 import com.example.geologist_service.mapper.GeologistMapper;
 import com.example.geologist_service.models.Geologist;
+import com.example.geologist_service.repository.GeologistRepository;
 import com.example.geologist_service.service.GeologistService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.hamcrest.Matchers;
@@ -33,9 +35,9 @@ import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-@WebMvcTest(GeologistController.class)
+@WebMvcTest(controllers = GeologistController.class)
 @ActiveProfiles("test")
-@Import(GlobalExceptionHandler.class)
+@Import({GlobalExceptionHandler.class, MongoTestConfig.class})
 public class GeologistControllerTest {
 
     @Autowired
@@ -51,8 +53,12 @@ public class GeologistControllerTest {
     private GeologistMapper geologistMapper;
 
 
+    @MockBean
+    private GeologistRepository geologistRepository;
+
+
     @Test
-    @DisplayName("Test para agregar un geólogo a la base de datos")
+    @DisplayName("Test para agregar un geólogo a la base de datos (async)")
     void addGeologist_ShouldReturnEntity() throws Exception {
         // Arrange
         Geologist g1 = new Geologist();
@@ -65,16 +71,26 @@ public class GeologistControllerTest {
 
         List<Geologist> list = List.of(g1, g2);
 
-        when(geologistService.createGeologist(anyList())).thenReturn(CompletableFuture.completedFuture(list));
+        when(geologistService.createGeologist(anyList()))
+                .thenReturn(CompletableFuture.completedFuture(list));
 
         // Act & Assert
-        mockMvc.perform(post("/geologist/addGeologist")
+
+        // Paso 1: realiza la petición y comprueba que la petición async ha comenzado
+        var mvcResult = mockMvc.perform(post("/geologist/geologists")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(list)))
+                .andExpect(request().asyncStarted())
+                .andReturn();
+
+        // Paso 2: espera y realiza async dispatch para obtener la respuesta real
+        mockMvc.perform(asyncDispatch(mvcResult))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.length()").value(2))
                 .andExpect(jsonPath("$[0].lastNameGeologist").value("Smith"));
     }
+
+
 
 
     @Test
@@ -116,7 +132,7 @@ public class GeologistControllerTest {
         mockMvc.perform(get("/geologist/getGeologistById/{idGeologist}", "1L")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.idGeologist").value("1"));
+                .andExpect(jsonPath("$.idGeologist").value("1L"));
 
     }
 

@@ -1,5 +1,7 @@
 package com.example.sample_service.controller;
 
+
+import com.example.sample_service.config.TestJacksonConfig;
 import com.example.sample_service.dtos.PatchSampleDTO;
 import com.example.sample_service.enums.SampleType;
 import com.example.sample_service.exeption.ResourceNotFoundException;
@@ -7,12 +9,16 @@ import com.example.sample_service.feingclient.StudyClient;
 import com.example.sample_service.models.Sample;
 import com.example.sample_service.service.SampleService;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
@@ -26,8 +32,10 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.doNothing;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+@Import(TestJacksonConfig.class)
 @WebMvcTest(SampleController.class)
 @ActiveProfiles("test")
 public class SampleTestController {
@@ -43,6 +51,11 @@ public class SampleTestController {
     @MockBean
     private SampleService sampleService;
 
+    @BeforeEach
+    void setup() {
+        objectMapper.registerModule(new JavaTimeModule());
+        objectMapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
+    }
 
     @Test
     @DisplayName("Llama al método post para crear una lista de muestras")
@@ -53,14 +66,14 @@ public class SampleTestController {
         sample1.setDescription("Descripción válida");
         sample1.setCollectedDate(LocalDate.of(2025, 7, 20));
         sample1.setMeasurementValue(10.5);
-        sample1.setIdStudy(1L);
+        sample1.setIdStudy("1");
 
         Sample sample2 = new Sample();
         sample2.setSampleType(SampleType.SOIL);
         sample2.setDescription("Otra muestra válida");
         sample2.setCollectedDate(LocalDate.of(2025, 7, 19));
         sample2.setMeasurementValue(5.0);
-        sample2.setIdStudy(2L);
+        sample2.setIdStudy("2");
 
         List<Sample> sampleList = List.of(sample1, sample2);
 
@@ -71,6 +84,7 @@ public class SampleTestController {
         mockMvc.perform(post("/sample/addSample")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(sampleList)))
+                .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.length()").value(2));
     }
@@ -99,15 +113,15 @@ public class SampleTestController {
     void getSampleById_ShouldReturnASample() throws Exception {
         //Arrange
         Sample sample1 = new Sample();
-        sample1.setIdSample(1L);
+        sample1.setIdSample("1L");
 
-        Mockito.when(sampleService.showSampleById(1L)).thenReturn(sample1);
+        Mockito.when(sampleService.showSampleById("1L")).thenReturn(sample1);
 
         //Act + assert
-        mockMvc.perform(get("/sample/id/{idSample}", 1L)
+        mockMvc.perform(get("/sample/id/{idSample}", "1L")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.idSample").value(1));
+                .andExpect(jsonPath("$.idSample").value("1L"));
     }
 
     @Test
@@ -115,13 +129,13 @@ public class SampleTestController {
     void getSampleById_ShouldReturnAnException() throws Exception {
         //Arrange
         Sample sample1 = new Sample();
-        sample1.setIdSample(1L);
+        sample1.setIdSample("1L");
 
-        Mockito.when(sampleService.showSampleById(1L))
+        Mockito.when(sampleService.showSampleById("1L"))
                 .thenThrow(new ResourceNotFoundException("Sample not found"));
 
         //Act + assert
-        mockMvc.perform(get("/sample/id/{idSample}", 1L))
+        mockMvc.perform(get("/sample/id/{idSample}", "1L"))
                 .andExpect(status().isNotFound())
                 .andExpect(result ->
                         assertTrue(result.getResolvedException() instanceof ResourceNotFoundException))
@@ -134,15 +148,15 @@ public class SampleTestController {
     void deleteSample_ShouldReturnVoid() throws Exception{
         //Arrange:
         Sample sample1 = new Sample();
-        sample1.setIdSample(1L);
+        sample1.setIdSample("1L");
 
-        doNothing().when(sampleService).removeSampleById(1L);
+        doNothing().when(sampleService).removeSampleById("1L");
 
         //Act + assert
-        mockMvc.perform(delete("/sample/delete/id/{idSample}", 1L))
+        mockMvc.perform(delete("/sample/delete/id/{idSample}", "1L"))
                 .andExpect(status().isOk())
                 .andExpect(content()
-                        .string("Sample with id 1 has been removed successfully."));
+                        .string("Sample with id 1L has been removed successfully."));
     }
 
     @Test
@@ -150,9 +164,9 @@ public class SampleTestController {
     void deleteSample_ShouldReturnException() throws Exception{
         //Arrange
         Mockito.doThrow(new ResourceNotFoundException("Sample not found"))
-                .when(sampleService).removeSampleById(1L);
+                .when(sampleService).removeSampleById("1L");
         //Act + assert
-        mockMvc.perform(delete("/sample/delete/id/{idSample}", 1L))
+        mockMvc.perform(delete("/sample/delete/id/{idSample}", "1L"))
                 .andExpect(status().isNotFound())
                 .andExpect(content().string("Sample not found"));
     }
@@ -161,20 +175,20 @@ public class SampleTestController {
     @DisplayName("Llama al método que actualiza una muestra")
     void updateSample_ShouldReturnOkMessage() throws Exception {
         // Arrange
-        Long sampleId = 1L;
+        String sampleId = "1L";
 
         PatchSampleDTO patchSample = new PatchSampleDTO();
         patchSample.setSampleType(SampleType.MINERAL);
         patchSample.setDescription("Otra muestra válida");
         patchSample.setMeasurementValue(5.0);
-        patchSample.setIdStudy(1L);
+        patchSample.setIdStudy("1L");
 
         Sample sampleUpdated = new Sample();
         sampleUpdated.setIdSample(sampleId);
         sampleUpdated.setSampleType(SampleType.MINERAL);
         sampleUpdated.setDescription("Otra muestra válida");
         sampleUpdated.setMeasurementValue(5.0);
-        sampleUpdated.setIdStudy(1L);
+        sampleUpdated.setIdStudy("1L");
 
         Mockito.when(sampleService.changeSample(eq(sampleId), any(PatchSampleDTO.class)))
                 .thenReturn(sampleUpdated);
@@ -194,12 +208,12 @@ public class SampleTestController {
         Sample sample1 = new Sample();
         sample1.setSampleType(SampleType.ROCK);
         sample1.setMeasurementValue(10.5);
-        sample1.setIdStudy(1L);
+        sample1.setIdStudy("1L");
 
         Sample sample2 = new Sample();
         sample2.setSampleType(SampleType.SOIL);
         sample2.setMeasurementValue(5.0);
-        sample2.setIdStudy(2L);
+        sample2.setIdStudy("2L");
 
         List<Sample> sampleList = List.of(sample1, sample2);
 
@@ -207,16 +221,17 @@ public class SampleTestController {
 
         //Act + assert
         mockMvc.perform(get("/sample/sorted/byMeasurement")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(sampleList)))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(sampleList)))
                 .andExpect(jsonPath("$.length()").value(2))  // Verifica tamaño de la lista
                 .andExpect(jsonPath("$[0].sampleType").value("ROCK"))
                 .andExpect(jsonPath("$[0].measurementValue").value(10.5))
-                .andExpect(jsonPath("$[0].idStudy").value(1))
+                .andExpect(jsonPath("$[0].idStudy").value("1L"))
                 .andExpect(jsonPath("$[1].sampleType").value("SOIL"))
                 .andExpect(jsonPath("$[1].measurementValue").value(5.0))
-                .andExpect(jsonPath("$[1].idStudy").value(2));
+                .andExpect(jsonPath("$[1].idStudy").value("2L"));
     }
 
 
 }
+

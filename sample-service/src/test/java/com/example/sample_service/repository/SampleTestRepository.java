@@ -28,14 +28,14 @@ public class SampleTestRepository {
         sample1.setDescription("Descripción válida");
         sample1.setCollectedDate(LocalDate.of(2025, 7, 20));
         sample1.setMeasurementValue(10.5);
-        sample1.setIdStudy(1L);
+        sample1.setIdStudy("1");
 
         Sample sample2 = new Sample();
         sample2.setSampleType(SampleType.SOIL);
         sample2.setDescription("Otra muestra válida");
         sample2.setCollectedDate(LocalDate.of(2025, 7, 19));
         sample2.setMeasurementValue(5.0);
-        sample2.setIdStudy(2L);
+        sample2.setIdStudy("2");
 
         //Act
         List<Sample> savedSamples = sampleRepository.saveAll(List.of(sample1, sample2));
@@ -58,7 +58,7 @@ public class SampleTestRepository {
     void findSampleById_ShouldReturnSample(){
         //Arrange
         Sample sample1 = new Sample();
-        sample1.setIdStudy(1L);
+        sample1.setIdStudy("1L");
         sample1.setDescription("---");
         sample1.setSampleType(SampleType.ROCK);
         sample1.setCollectedDate(LocalDate.of(2025, 2, 4));
