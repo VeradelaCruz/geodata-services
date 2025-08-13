@@ -31,14 +31,24 @@ pipeline {
         stage('Docker Build & Push') {
             steps {
                 script {
-                    def services = ['eureka-service', 'config-server', 'apigateway', 'geologist-service', 'sample-service', 'study-service']
-                    sh "echo '$DOCKER_CREDS_PSW' | docker login -u '$DOCKER_CREDS_USR' --password-stdin"
+                    def services = [
+                        [name: 'eureka-service', folder: 'eureka-service'],
+                        [name: 'config-server', folder: 'configGeo-server'],
+                        [name: 'apigateway', folder: 'api-gateway'],
+                        [name: 'geologist-service', folder: 'geologist-service'],
+                        [name: 'sample-service', folder: 'sample-service'],
+                        [name: 'study-service', folder: 'study-service']
+                    ]
+
+                    // Login seguro a Docker Hub
+                    sh """
+                    echo '${DOCKER_CREDS_PSW}' | docker login -u '${DOCKER_CREDS_USR}' --password-stdin
+                    """
+
                     for (s in services) {
-                        echo "Building and pushing Docker image for ${s}..."
-                        dir(s) {
-                            sh "docker build -t $DOCKER_CREDS_USR/${s}:latest ."
-                            sh "docker push $DOCKER_CREDS_USR/${s}:latest"
-                        }
+                        echo "Building and pushing Docker image for ${s.name}..."
+                        sh "docker build -f ${s.folder}/Dockerfile -t ${DOCKER_CREDS_USR}/${s.name}:latest ${s.folder}"
+                        sh "docker push ${DOCKER_CREDS_USR}/${s.name}:latest"
                     }
                 }
             }
