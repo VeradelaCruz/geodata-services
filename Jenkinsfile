@@ -14,14 +14,15 @@ pipeline {
             }
         }
 
-        stage('Build Microservices') {
+        stage('Build & Test Microservices') {
             steps {
                 script {
                     def services = ['eureka-service', 'configGeo-server', 'api-gateway', 'geologist-service', 'sample-service', 'study-service']
                     for (s in services) {
-                        echo "Compiling ${s}..."
+                        echo "Compiling and testing ${s}..."
                         dir(s) {
-                            sh 'mvn clean package -DskipTests'
+                            // Compila y ejecuta tests
+                            sh 'mvn clean package'
                         }
                     }
                 }
@@ -40,7 +41,7 @@ pipeline {
                         [name: 'study-service', folder: 'study-service']
                     ]
 
-                    // Login seguro a Docker Hub
+                    // Login a Docker Hub
                     sh """
                     echo '${DOCKER_CREDS_PSW}' | docker login -u '${DOCKER_CREDS_USR}' --password-stdin
                     """
