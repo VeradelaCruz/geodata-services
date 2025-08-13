@@ -5,36 +5,48 @@ pipeline {
         DOCKER_CREDS = credentials('dockerhub-credentials')
     }
 
-   stage('Checkout') {
-       steps {
-           git branch: 'master',
-               url: 'https://github.com/VeradelaCruz/geodata-services.git',
-               credentialsId: 'github-creds'  // <-- ID exacto de la credencial que creaste
-       }
-
-        stage('Build with Maven') {
+    stages {
+        stage('Checkout') {
             steps {
-                sh 'mvn clean package -DskipTests'
+                git branch: 'master',
+                    url: 'https://github.com/VeradelaCruz/geodata-services.git',
+                    credentialsId: 'github-creds'
+            }
+        }
+
+        stage('Build Microservices') {
+            steps {
+                script {
+                    def services = ['eureka-service', 'configGeo-server', 'api-gateway', 'geologist-service', 'sample-service', 'study-service']
+                    for (s in services) {
+                        echo "Compiling ${s}..."
+                        dir(s) {
+                            sh 'mvn clean package -DskipTests'
+                        }
+                    }
+                }
             }
         }
 
         stage('Docker Build & Push') {
             steps {
-                sh '''
-                echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin
-                docker build -t $DOCKER_USER/geodata-service:latest .
-                docker push $DOCKER_USER/geodata-service:latest
-                '''
+                script {
+                    def services = ['eureka-service', 'config-server', 'apigateway', 'geologist-service', 'sample-service', 'study-service']
+                    sh "echo '$DOCKER_CREDS_PSW' | docker login -u '$DOCKER_CREDS_USR' --password-stdin"
+                    for (s in services) {
+                        echo "Building and pushing Docker image for ${s}..."
+                        dir(s) {
+                            sh "docker build -t $DOCKER_CREDS_USR/${s}:latest ."
+                            sh "docker push $DOCKER_CREDS_USR/${s}:latest"
+                        }
+                    }
+                }
             }
         }
     }
 
     post {
-        success {
-            echo 'Pipeline completado correctamente ✅'
-        }
-        failure {
-            echo 'Pipeline falló ❌'
-        }
+        success { echo 'Pipeline completado correctamente ✅' }
+        failure { echo 'Pipeline falló ❌' }
     }
 }
