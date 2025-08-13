@@ -5,12 +5,12 @@ pipeline {
         DOCKER_CREDS = credentials('dockerhub-credentials')
     }
 
-    stages {
-        stage('Checkout') {
-            steps {
-                git branch: 'master', url: 'https://github.com/tu-usuario/geodata-service.git'
-            }
-        }
+   stage('Checkout') {
+       steps {
+           git branch: 'master',
+               url: 'https://github.com/VeradelaCruz/geodata-services.git',
+               credentialsId: 'github-creds'  // <-- ID exacto de la credencial que creaste
+       }
 
         stage('Build with Maven') {
             steps {
