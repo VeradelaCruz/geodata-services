@@ -1,24 +1,21 @@
 package com.example.geologist_service.controller;
 
-import com.example.geologist_service.config.MongoTestConfig;
 import com.example.geologist_service.dtos.GeologistDTO;
 import com.example.geologist_service.dtos.GeologistYearsExperienceDTO;
 import com.example.geologist_service.dtos.PatchGeologist;
-import com.example.geologist_service.exeption.GlobalExceptionHandler;
 import com.example.geologist_service.exeption.ResourceNotFoundException;
-import com.example.geologist_service.mapper.GeologistMapper;
 import com.example.geologist_service.models.Geologist;
-import com.example.geologist_service.repository.GeologistRepository;
 import com.example.geologist_service.service.GeologistService;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.hamcrest.Matchers;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
@@ -35,10 +32,10 @@ import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-@WebMvcTest(controllers = GeologistController.class)
+@SpringBootTest
 @ActiveProfiles("test")
-@Import({GlobalExceptionHandler.class, MongoTestConfig.class})
-public class GeologistControllerTest {
+@AutoConfigureMockMvc
+class GeologistControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
@@ -49,169 +46,139 @@ public class GeologistControllerTest {
     @Autowired
     private ObjectMapper objectMapper;
 
-    @MockBean
-    private GeologistMapper geologistMapper;
+    private Geologist g1;
+    private Geologist g2;
+    private List<Geologist> geologistList;
 
+    private GeologistDTO dto1;
+    private GeologistDTO dto2;
+    private List<GeologistDTO> dtoList;
 
-    @MockBean
-    private GeologistRepository geologistRepository;
+    private GeologistYearsExperienceDTO expDto1;
+    private GeologistYearsExperienceDTO expDto2;
+    private List<GeologistYearsExperienceDTO> expDtoList;
 
+    private PatchGeologist patchGeologist;
 
-    @Test
-    @DisplayName("Test para agregar un geólogo a la base de datos (async)")
-    void addGeologist_ShouldReturnEntity() throws Exception {
-        // Arrange
-        Geologist g1 = new Geologist();
+    @BeforeEach
+    void setUp() {
+        // Model
+        g1 = new Geologist();
         g1.setIdGeologist("1L");
         g1.setLastNameGeologist("Smith");
 
-        Geologist g2 = new Geologist();
+        g2 = new Geologist();
         g2.setIdGeologist("2L");
         g2.setLastNameGeologist("Jones");
 
-        List<Geologist> list = List.of(g1, g2);
+        geologistList = List.of(g1, g2);
 
+        // DTO
+        dto1 = new GeologistDTO();
+        dto1.setIdGeologist("1L");
+        dto1.setLastNameGeologist("Smith");
+        dto1.setYearsOfExperience(5.0);
+
+        dto2 = new GeologistDTO();
+        dto2.setIdGeologist("2L");
+        dto2.setLastNameGeologist("Jones");
+        dto2.setYearsOfExperience(7.0);
+
+        dtoList = List.of(dto1, dto2);
+
+        // DTO experiencia
+        expDto1 = new GeologistYearsExperienceDTO();
+        expDto1.setIdGeologist("1L");
+        expDto1.setLastNameGeologist("Smith");
+        expDto1.setYearsOfExperience(5.0);
+
+        expDto2 = new GeologistYearsExperienceDTO();
+        expDto2.setIdGeologist("2L");
+        expDto2.setLastNameGeologist("Jones");
+        expDto2.setYearsOfExperience(7.0);
+
+        expDtoList = List.of(expDto1, expDto2);
+
+        // Patch DTO
+        patchGeologist = new PatchGeologist();
+    }
+
+    @Test
+    @DisplayName("Agregar geólogos (async)")
+    void addGeologist_ShouldReturnEntity() throws Exception {
         when(geologistService.createGeologist(anyList()))
-                .thenReturn(CompletableFuture.completedFuture(list));
+                .thenReturn(CompletableFuture.completedFuture(geologistList));
 
-        // Act & Assert
-
-        // Paso 1: realiza la petición y comprueba que la petición async ha comenzado
         var mvcResult = mockMvc.perform(post("/geologist/geologists")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(list)))
+                        .content(objectMapper.writeValueAsString(geologistList)))
                 .andExpect(request().asyncStarted())
                 .andReturn();
 
-        // Paso 2: espera y realiza async dispatch para obtener la respuesta real
         mockMvc.perform(asyncDispatch(mvcResult))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.length()").value(2))
                 .andExpect(jsonPath("$[0].lastNameGeologist").value("Smith"));
     }
 
-
-
-
     @Test
-    @DisplayName("Test para ver todos los geólogos")
+    @DisplayName("Listar todos los geólogos")
     void getAllGeologists_ShouldReturnAList() throws Exception {
-        // Arrange
-        Geologist g1 = new Geologist();
-        g1.setIdGeologist("1L");
-        g1.setLastNameGeologist("Smith");
+        when(geologistService.showAllGeologists()).thenReturn(geologistList);
 
-        Geologist g2 = new Geologist();
-        g2.setIdGeologist("2L");
-        g2.setLastNameGeologist("Jones");
-
-        List<Geologist> list = List.of(g1, g2);
-
-        when(geologistService.showAllGeologists()).thenReturn(list);
-
-        // Act + Assert
         mockMvc.perform(get("/geologist/getAllGeologists")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$", Matchers.hasSize(2)))
+                .andExpect(jsonPath("$.length()").value(2)) // <- sin Hamcrest
                 .andExpect(jsonPath("$[0].lastNameGeologist").value("Smith"))
                 .andExpect(jsonPath("$[1].lastNameGeologist").value("Jones"));
     }
 
-
     @Test
-    @DisplayName("Test que devuelve un geólogo por id si lo encuentra")
+    @DisplayName("Buscar por id (encontrado)")
     void getGeologistById_ShouldReturnGeologist() throws Exception {
-        //Arrange
-        Geologist geologist= new Geologist();
-        geologist.setIdGeologist("1L");
+        when(geologistService.showGeologistById("1L")).thenReturn(g1);
 
-        when(geologistService.showGeologistById("1L")).thenReturn(geologist);
-
-        //Act + assert:
         mockMvc.perform(get("/geologist/getGeologistById/{idGeologist}", "1L")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.idGeologist").value("1L"));
-
     }
 
     @Test
-    @DisplayName("Test que devuelve un geólogo por id si NO encuentra")
+    @DisplayName("Buscar por id (no encontrado)")
     void getGeologistById_ShouldThrowException() throws Exception {
-
         when(geologistService.showGeologistById("1L"))
                 .thenThrow(new ResourceNotFoundException("Geologist not found"));
 
-        //Act + assert:
         mockMvc.perform(get("/geologist/getGeologistById/{idGeologist}", "1L"))
                 .andExpect(status().isNotFound())
-                .andExpect(result ->
-                assertTrue(result.getResolvedException() instanceof ResourceNotFoundException))
-                .andExpect(result ->
-                        assertEquals("Geologist not found", result.getResolvedException().getMessage()));
+                .andExpect(result -> assertTrue(result.getResolvedException() instanceof ResourceNotFoundException))
+                .andExpect(result -> assertEquals("Geologist not found",
+                        result.getResolvedException().getMessage()));
     }
 
     @Test
-    @DisplayName("Test que devuelve un geologo actualizado")
-    void  updateGeologist_ShouldReturnGeologistUpdated() throws Exception{
-        //Arrange
-        String id = "1L";
-        PatchGeologist patchGeologist = new PatchGeologist();
-        Geologist geologist= new Geologist();
+    @DisplayName("Actualizar geólogo (PATCH)")
+    void updateGeologist_ShouldReturnGeologistUpdated() throws Exception {
+        when(geologistService.patchGeologist("1L", patchGeologist)).thenReturn(g1);
 
-        when(geologistService.patchGeologist(id, patchGeologist)).thenReturn(geologist);
-
-        // Convertir a JSON
-        String jsonContent = new ObjectMapper().writeValueAsString(patchGeologist);
-
-        // Act + Assert
-        mockMvc.perform(patch("/geologist/updateGeologist/{idGeologist}", id)
+        mockMvc.perform(patch("/geologist/updateGeologist/{idGeologist}", "1L")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(jsonContent))
+                        .content(objectMapper.writeValueAsString(patchGeologist)))
                 .andExpect(status().isOk())
                 .andExpect(content().string("Geologist updated."));
     }
 
     @Test
-    @DisplayName("Test que devuelve un geólogo por años de experiencia")
-    void getGeologistsByYearsOfExperience_ShouldReturnListOfGeologists() throws Exception{
-        //Arrange
-        GeologistDTO g1 = new GeologistDTO();
-        g1.setIdGeologist("1L");
-        g1.setLastNameGeologist("Smith");
-        g1.setYearsOfExperience(5.0);
+    @DisplayName("Filtrar por años de experiencia")
+    void getGeologistsByYearsOfExperience_ShouldReturnListOfGeologists() throws Exception {
+        Double minYears = 4.0;
+        when(geologistService.findAllGeologistByExperience(minYears)).thenReturn(expDtoList);
 
-        GeologistDTO g2 = new GeologistDTO();
-        g2.setIdGeologist("2L");
-        g2.setLastNameGeologist("Jones");
-        g2.setYearsOfExperience(7.0);
-        List<GeologistDTO> list = List.of(g1, g2);
-
-        GeologistYearsExperienceDTO geoDTO1= new GeologistYearsExperienceDTO();
-        geoDTO1.setIdGeologist("1L");
-        geoDTO1.setLastNameGeologist("Smith");
-        geoDTO1.setYearsOfExperience(5.0);
-
-        GeologistYearsExperienceDTO geoDTO2= new GeologistYearsExperienceDTO();
-        geoDTO2.setIdGeologist("2L");
-        geoDTO2.setLastNameGeologist("Jones");
-        geoDTO2.setYearsOfExperience(7.0);
-
-        List<GeologistYearsExperienceDTO> listDTO = List.of(geoDTO1, geoDTO2);
-
-        Double minYears= 4.0;
-
-        when(geologistService.findAllGeologistByExperience(minYears)).thenReturn(listDTO);
-
-
-        //Act+ Assert
         mockMvc.perform(get("/geologist/getGeologistsByYearsOfExperience")
                         .param("minYears", String.valueOf(minYears)))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$", Matchers.hasSize(2)));
-
+                .andExpect(jsonPath("$.length()").value(2)); // <- sin Hamcrest
     }
-
-
 }
